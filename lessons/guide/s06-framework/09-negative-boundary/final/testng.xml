@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- The whole suite: every test class in the tests package, every group except "demo"
+     (deliberate failures that only run when asked). -->
+<suite name="Students framework" verbose="1">
+  <test name="all tests">
+    <groups>
+      <run>
+        <exclude name="demo"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="tests.*"/>
+    </packages>
+  </test>
+</suite>

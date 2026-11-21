@@ -1,0 +1,3 @@
+Copy studentApp-java21.jar here before you build: from apps/students-app/ of this repository, or from the release
+https://github.com/propfuturesbot/restassured-course-code/releases/tag/students-app-java21
+(The workflow builds the image from this folder, so commit the jar to your own repository with it.)

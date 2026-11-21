@@ -1,0 +1,51 @@
+# Every night, and by hand: the regression group on JDK 17 and on JDK 21, as two parallel jobs.
+name: Nightly regression
+
+# ---
+# cron is in UTC: 02:00 every day. GitHub may start a scheduled run a few minutes late,
+# and runs schedules only from the default branch. workflow_dispatch adds a "Run workflow" button.
+on:
+  schedule:
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  regression:
+    # ---
+    # A matrix runs the same job once per value: here one job on JDK 17 and one on JDK 21.
+    # fail-fast: false lets the JDK 21 job finish even when the JDK 17 job fails, so you see both results.
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['17', '21']
+    name: Regression on JDK ${{ matrix.java }}
+    runs-on: ubuntu-latest
+    env:
+      CAMPUS_API_KEY: ${{ secrets.CAMPUS_API_KEY }}
+      CAMPUS_BASE_URL: ${{ vars.CAMPUS_BASE_URL || 'https://campus-lab-production.up.railway.app' }}
+
+    steps:
+      - uses: actions/checkout@v7
+      # ---
+      # matrix.java picks the JDK of this job. The pom compiles for release 17,
+      # so the same code builds on both.
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+
+      # --- keep
+      # The same sandbox-key step as in the pull request workflow.
+      - name: Get a sandbox key when no secret is set
+        if: env.CAMPUS_API_KEY == ''
+        run: |
+          key=$(curl -sf -X POST "$CAMPUS_BASE_URL/api/keys" -H 'Content-Type: application/json' -d '{}' | jq -r .apiKey)
+          echo "::add-mask::$key"
+          echo "CAMPUS_API_KEY=$key" >> "$GITHUB_ENV"
+          echo "Got a sandbox key: $key"
+
+      # ---
+      # Both groups this time: the smoke tests and the slower regression tests.
+      - name: Regression tests
+        run: mvn -B test -Dgroups=smoke,regression

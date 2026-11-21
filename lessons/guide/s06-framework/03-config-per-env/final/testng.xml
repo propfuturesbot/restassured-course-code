@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- The whole suite: every test class in the tests package (and the packages under it). -->
+<suite name="Students framework" verbose="1">
+  <test name="all tests">
+    <packages>
+      <package name="tests.*"/>
+    </packages>
+  </test>
+</suite>

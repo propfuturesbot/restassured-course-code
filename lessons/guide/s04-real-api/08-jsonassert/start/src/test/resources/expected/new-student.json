@@ -1,0 +1,17 @@
+{
+  "id": 0,
+  "firstName": "Ada",
+  "lastName": "Lovelace",
+  "fullName": "Ada Lovelace",
+  "email": "ada.<timestamp>@example.edu",
+  "programme": "Mathematics",
+  "programmeCode": "MATH",
+  "year": 2,
+  "status": "active",
+  "dateOfBirth": "2004-12-10",
+  "enrolledOn": "<today>",
+  "gpa": null,
+  "role": "student",
+  "createdAt": "<a timestamp>",
+  "updatedAt": "<a timestamp>"
+}

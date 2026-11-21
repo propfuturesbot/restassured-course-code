@@ -1,0 +1,101 @@
+# Run the API tests, publish the Allure report to GitHub Pages, put its link in the pull request,
+# and turn the check red when a test failed. Pages must be set to "GitHub Actions" in the repository settings.
+name: API tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CAMPUS_API_KEY: ${{ secrets.CAMPUS_API_KEY }}
+      CAMPUS_BASE_URL: ${{ vars.CAMPUS_BASE_URL || 'https://campus-lab-production.up.railway.app' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      # No key is stored in this public repository: the job asks Campus Lab for a sandbox key
+      # and masks it (see the secrets workflow). A real API key would come from secrets.CAMPUS_API_KEY.
+      - name: Get a sandbox key when no secret is set
+        if: env.CAMPUS_API_KEY == ''
+        run: |
+          key=$(curl -sf -X POST "$CAMPUS_BASE_URL/api/keys" -H 'Content-Type: application/json' -d '{}' | jq -r .apiKey)
+          echo "::add-mask::$key"
+          echo "CAMPUS_API_KEY=$key" >> "$GITHUB_ENV"
+
+      # ---
+      # continue-on-error lets the job go on after a red test run, so the report is built
+      # exactly when we need it most. id: tests lets a later step read the outcome.
+      - name: API tests
+        id: tests
+        continue-on-error: true
+        run: mvn -B test
+
+      # ---
+      # Turn target/allure-results into a website, then hand the folder to GitHub Pages.
+      # if: always() builds the report even when an earlier step failed.
+      - name: Build the Allure report
+        if: always()
+        run: mvn -B allure:report
+      - uses: actions/upload-pages-artifact@v5
+        if: always()
+        with:
+          path: target/site/allure-maven-plugin
+
+      # ---
+      # The last step makes the job red again when the tests failed. With "Require status checks"
+      # on the main branch, a red check blocks the merge button of the pull request.
+      - name: Fail when a test failed
+        if: steps.tests.outcome == 'failure'
+        run: |
+          echo "::error::API tests failed. Open the Allure report linked in the pull request."
+          exit 1
+
+  # ---
+  # A second job publishes the site. It runs after the test job, also when that job is red.
+  # Pages needs these two permissions; concurrency keeps two deployments from racing.
+  deploy:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
+
+  # ---
+  # On a pull request, write the report link as a comment, with the test result next to it.
+  comment:
+    needs: [test, deploy]
+    if: always() && github.event_name == 'pull_request' && needs.deploy.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const result = '${{ needs.test.result }}' === 'success' ? 'green' : 'red';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `API tests are ${result}. Allure report: ${{ needs.deploy.outputs.page_url }}`,
+            });

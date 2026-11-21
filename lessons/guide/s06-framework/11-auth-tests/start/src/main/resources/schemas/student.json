@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "A student of the /student API (same shape on the Students app and Campus Lab)",
+  "type": "object",
+  "required": [
+    "id",
+    "firstName",
+    "lastName",
+    "email",
+    "programme",
+    "courses"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "pattern": "^[^@\\s]+@[^@\\s]+$"
+    },
+    "programme": {
+      "type": "string"
+    },
+    "courses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

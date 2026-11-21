@@ -1,0 +1,55 @@
+# Start the Students app inside the job, then run the API tests against it.
+# The app is built from students-app/Dockerfile, so CI tests the exact version that is in the repository.
+name: API tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # ---
+    # The steps run on the runner itself, so the container's published port is on localhost.
+    # STUDENTS_BASE_URI tells the tests where the app is, exactly as on your machine.
+    env:
+      STUDENTS_BASE_URI: http://localhost:8080
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # ---
+      # Docker is already installed on GitHub's Ubuntu runners. Build the image from the Dockerfile
+      # in the repository and start it in the background (-d), with the app's port published.
+      - name: Start the Students app
+        run: |
+          docker build -t students-app students-app
+          docker run -d --name students -p 8080:8080 students-app
+
+      # ---
+      # The container starts in a second, Spring Boot needs a few more. Ask the API until it answers
+      # (up to 60 seconds). Without this step the first tests hit a port that is not open yet.
+      - name: Wait until the app answers
+        run: |
+          for i in $(seq 1 60); do
+            curl -sf "$STUDENTS_BASE_URI/student/list?limit=1" > /dev/null && echo "up after ${i}s" && exit 0
+            sleep 1
+          done
+          docker logs students
+          exit 1
+
+      # ---
+      # The tests, then the app's own log only when something failed: that is where a 500 explains itself.
+      # if: failure() runs a step only after an earlier step went red.
+      - name: Run the API tests
+        run: mvn -B test
+      - name: Show the app log
+        if: failure()
+        run: docker logs students

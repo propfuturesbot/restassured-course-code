@@ -1,0 +1,33 @@
+# Both targets of the framework on your own machine, built from source:
+#   the Students app  from STUDENTS_APP_DIR (a folder with studentApp-java21.jar + its Dockerfile, default ../students-app)
+#   Campus Lab        from CAMPUS_LAB_DIR   (your clone of the campus-lab repo, default ../campus-lab)
+# Start them yourself:  docker compose up -d --build --wait      Or run everything:  ./run-local.sh
+name: restassured-framework
+
+services:
+  # ---
+  # The Students app: built from its jar, on STUDENTS_PORT (8080 unless you change it).
+  # The healthcheck only asks "is port 8080 open?" (bash /dev/tcp), so it needs no curl in the image.
+  students:
+    build: ${STUDENTS_APP_DIR:-../students-app}
+    ports:
+      - "${STUDENTS_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080'"]
+      interval: 3s
+      timeout: 2s
+      retries: 40
+
+  # ---
+  # Campus Lab in its single-container mode (SQLite inside, no Postgres or Redis): its Dockerfile has a
+  # healthcheck of its own. A LOCAL server, so we may set what a shared one never would:
+  # a higher rate limit (the suite is not paced to 120 requests a minute) and a known JWT signing secret,
+  # which only the expired-token test uses. Both are local-only values, not real secrets.
+  campus:
+    build: ${CAMPUS_LAB_DIR:-../campus-lab}
+    ports:
+      - "${CAMPUS_PORT:-8000}:8080"
+    environment:
+      PUBLIC_BASE_URL: http://localhost:${CAMPUS_PORT:-8000}
+      RATE_LIMIT_PER_MIN: "6000"
+      JWT_SECRET: ${CAMPUS_JWT_SECRET:-local-only-jwt-secret-0123456789abcdef}

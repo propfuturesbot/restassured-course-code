@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "GET /api/v1/students/{id}/enrollments",
+  "type": "object",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "studentId",
+          "courseId",
+          "status",
+          "term",
+          "enrolledAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "studentId": {
+            "type": "integer"
+          },
+          "courseId": {
+            "type": "integer"
+          },
+          "course": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "code": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "credits": {
+                "type": "integer"
+              }
+            }
+          },
+          "status": {
+            "enum": [
+              "enrolled",
+              "completed",
+              "dropped"
+            ]
+          },
+          "grade": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "term": {
+            "type": "string"
+          },
+          "enrolledAt": {
+            "type": "string"
+          },
+          "droppedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

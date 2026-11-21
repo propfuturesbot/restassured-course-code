@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The framework for the Students app and Campus Lab: Java 21, REST Assured 6.3.0, TestNG 7.12.
+     Every test of the suite:  mvn test        One class:  mvn test -Dtest=StudentListTest -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.coursesmith.restassured</groupId>
+  <artifactId>campus-framework</artifactId>
+  <version>1.0</version>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <rest-assured.version>6.3.0</rest-assured.version>
+    <testng.version>7.12.0</testng.version>
+    <!-- The TestNG suite file surefire runs. Another one:  mvn test -Dsuite=suites/smoke.xml -->
+    <suite>testng.xml</suite>
+  </properties>
+
+  <!-- No <scope>test</scope>: the framework classes in src/main/java (config, clients, models) use these too. -->
+  <dependencies>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>${rest-assured.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
+    </dependency>
+    <dependency>
+      <!-- REST Assured 6 ships no JSON mapper: Jackson turns maps and records into JSON and back -->
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.23.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>3.0</version>
+    </dependency>
+    <dependency>
+      <!-- Realistic random test data: names, emails, addresses -->
+      <groupId>net.datafaker</groupId>
+      <artifactId>datafaker</artifactId>
+      <version>2.7.0</version>
+    </dependency>
+    <dependency>
+      <!-- Fluent assertions: assertThat(x).isEqualTo(y), soft assertions, custom assert classes -->
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.27.6</version>
+    </dependency>
+    <dependency>
+      <!-- JSON Schema checks as a Hamcrest matcher: matchesJsonSchemaInClasspath("schemas/student.json") -->
+      <groupId>io.rest-assured</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <version>${rest-assured.version}</version>
+    </dependency>
+    <dependency>
+      <!-- Data-driven tests: CSV rows -->
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>5.12.0</version>
+    </dependency>
+    <dependency>
+      <!-- Data-driven tests: Excel workbooks (.xlsx) -->
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.4.1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.16.0</version>
+      </plugin>
+      <plugin>
+        <!-- 3.5.x on purpose: surefire 3.6 runs TestNG on the JUnit Platform and no longer reads
+             testng.xml ("Parameter suiteXmlFiles is not supported since 3.6.0"). A TestNG framework
+             lives in its suite files, so we stay on the last surefire that runs them. -->
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.6</version>
+        <configuration>
+          <!-- mvn test runs the suite file; mvn test -Dtest=SomeTest runs one class and ignores it -->
+          <suiteXmlFiles>
+            <suiteXmlFile>${suite}</suiteXmlFile>
+          </suiteXmlFiles>
+          <!-- Listeners for EVERY run: with a suite file and with -Dtest=SomeTest (which ignores the suite file) -->
+          <properties>
+            <property>
+              <name>listener</name>
+              <value>framework.listeners.TestListener,framework.listeners.RetryTransformer</value>
+            </property>
+          </properties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

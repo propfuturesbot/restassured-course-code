@@ -1,0 +1,21 @@
+# The first workflow: on every push and pull request, check out the code, install Java 21 and run mvn test.
+# GitHub runs it on a fresh Ubuntu machine; the run shows on the Actions tab of the repository.
+name: API tests
+
+# ---
+# When the workflow runs: on a push to main, on every pull request, and by hand from the Actions tab.
+
+
+# ---
+# One job on a GitHub-hosted Ubuntu runner. The tests read CAMPUS_BASE_URL, so we point them
+# at the public Campus Lab: the runner cannot reach the localhost of your laptop.
+
+
+    # ---
+    # Step one copies the repository onto the runner. Step two installs JDK 21 (Temurin)
+    # and caches ~/.m2, so the next run does not download every library again.
+
+
+    # ---
+    # The same command you run on your machine. -B (batch mode) keeps the log free of
+    # download progress bars. A failing test makes mvn exit 1, and that turns the job red.

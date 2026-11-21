@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="TestSuite" time="2.411" tests="3" errors="0" skipped="0" failures="1" flakes="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final/target/test-classes:/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final/target/classes:/home/ubuntu/.m2/repository/io/rest-assured/rest-assured/6.3.0/rest-assured-6.3.0.jar:/home/ubuntu/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:/home/ubuntu/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/home/ubuntu/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/home/ubuntu/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/home/ubuntu/.m2/repository/org/apache/httpcomponents/httpmime/4.5.14/httpmime-4.5.14.jar:/home/ubuntu/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar:/home/ubuntu/.m2/repository/io/rest-assured/json-path/6.3.0/json-path-6.3.0.jar:/home/ubuntu/.m2/repository/org/apache/groovy/groovy-json/5.0.8/groovy-json-5.0.8.jar:/home/ubuntu/.m2/repository/org/apache/groovy/groovy/5.0.8/groovy-5.0.8.jar:/home/ubuntu/.m2/repository/io/rest-assured/rest-assured-common/6.3.0/rest-assured-common-6.3.0.jar:/home/ubuntu/.m2/repository/io/rest-assured/xml-path/6.3.0/xml-path-6.3.0.jar:/home/ubuntu/.m2/repository/org/apache/groovy/groovy-xml/5.0.8/groovy-xml-5.0.8.jar:/home/ubuntu/.m2/repository/org/apache/commons/commons-lang3/3.21.0/commons-lang3-3.21.0.jar:/home/ubuntu/.m2/repository/org/testng/testng/7.12.0/testng-7.12.0.jar:/home/ubuntu/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/home/ubuntu/.m2/repository/org/jcommander/jcommander/1.83/jcommander-1.83.jar:/home/ubuntu/.m2/repository/org/webjars/jquery/3.7.1/jquery-3.7.1.jar:/home/ubuntu/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.23.0/jackson-databind-2.23.0.jar:/home/ubuntu/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.23/jackson-annotations-2.23.jar:/home/ubuntu/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.23.0/jackson-core-2.23.0.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-testng/2.35.6/allure-testng-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-java-commons/2.35.6/allure-java-commons-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-model/2.35.6/allure-model-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-test-filter/2.35.6/allure-test-filter-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-rest-assured/2.35.6/allure-rest-assured-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-attachments/2.35.6/allure-attachments-2.35.6.jar:/home/ubuntu/.m2/repository/org/freemarker/freemarker/2.3.33/freemarker-2.3.33.jar:/home/ubuntu/.m2/repository/org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar:"/>
+    <property name="java.vm.vendor" value="Ubuntu"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://ubuntu.com/"/>
+    <property name="user.timezone" value="Etc/UTC"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
+    <property name="sun.java.command" value="/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final/target/surefire/surefirebooter-20261121055752302_3.jar /home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final/target/surefire 2026-11-21T05-57-52_194-jvmRun1 surefire-20261121055752302_1tmp surefire_0-20261121055752302_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final/target/test-classes:/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final/target/classes:/home/ubuntu/.m2/repository/io/rest-assured/rest-assured/6.3.0/rest-assured-6.3.0.jar:/home/ubuntu/.m2/repository/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:/home/ubuntu/.m2/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar:/home/ubuntu/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:/home/ubuntu/.m2/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar:/home/ubuntu/.m2/repository/org/apache/httpcomponents/httpmime/4.5.14/httpmime-4.5.14.jar:/home/ubuntu/.m2/repository/org/ccil/cowan/tagsoup/tagsoup/1.2.1/tagsoup-1.2.1.jar:/home/ubuntu/.m2/repository/io/rest-assured/json-path/6.3.0/json-path-6.3.0.jar:/home/ubuntu/.m2/repository/org/apache/groovy/groovy-json/5.0.8/groovy-json-5.0.8.jar:/home/ubuntu/.m2/repository/org/apache/groovy/groovy/5.0.8/groovy-5.0.8.jar:/home/ubuntu/.m2/repository/io/rest-assured/rest-assured-common/6.3.0/rest-assured-common-6.3.0.jar:/home/ubuntu/.m2/repository/io/rest-assured/xml-path/6.3.0/xml-path-6.3.0.jar:/home/ubuntu/.m2/repository/org/apache/groovy/groovy-xml/5.0.8/groovy-xml-5.0.8.jar:/home/ubuntu/.m2/repository/org/apache/commons/commons-lang3/3.21.0/commons-lang3-3.21.0.jar:/home/ubuntu/.m2/repository/org/testng/testng/7.12.0/testng-7.12.0.jar:/home/ubuntu/.m2/repository/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/home/ubuntu/.m2/repository/org/jcommander/jcommander/1.83/jcommander-1.83.jar:/home/ubuntu/.m2/repository/org/webjars/jquery/3.7.1/jquery-3.7.1.jar:/home/ubuntu/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.23.0/jackson-databind-2.23.0.jar:/home/ubuntu/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.23/jackson-annotations-2.23.jar:/home/ubuntu/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.23.0/jackson-core-2.23.0.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-testng/2.35.6/allure-testng-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-java-commons/2.35.6/allure-java-commons-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-model/2.35.6/allure-model-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-test-filter/2.35.6/allure-test-filter-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-rest-assured/2.35.6/allure-rest-assured-2.35.6.jar:/home/ubuntu/.m2/repository/io/qameta/allure/allure-attachments/2.35.6/allure-attachments-2.35.6.jar:/home/ubuntu/.m2/repository/org/freemarker/freemarker/2.3.33/freemarker-2.3.33.jar:/home/ubuntu/.m2/repository/org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/ubuntu"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-10-24"/>
+    <property name="java.home" value="/usr/lib/jvm/java-21-openjdk-amd64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final/target/surefire/surefirebooter-20261121055752302_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.13.0.3+1-1-24.04.1-Ubuntu"/>
+    <property name="user.name" value="ubuntu"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="7.0.0-1014-aws"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="/home/ubuntu/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugs.launchpad.net/ubuntu/+source/openjdk-21"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="21.0.13.0.3"/>
+    <property name="user.dir" value="/home/ubuntu/ra/repo/lessons/guide/s08-ai/06-triage-red-ci/final"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="groups" value="smoke"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Ubuntu"/>
+    <property name="java.vm.version" value="21.0.13.0.3+1-1-24.04.1-Ubuntu"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="campusLabIsUp" classname="campus.StudentsSmokeTest" time="1.358">
+    <system-err><![CDATA[SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+]]></system-err>
+  </testcase>
+  <testcase name="ourKeyReadsStudents" classname="campus.StudentsSmokeTest" time="0.288"/>
+  <testcase name="readProfile" classname="campus.StudentProfileTest" time="0.044">
+    <failure message="1 expectation failed.&#10;Expected status code &lt;200&gt; but was &lt;404&gt;.&#10;" type="java.lang.AssertionError"><![CDATA[java.lang.AssertionError: 
+1 expectation failed.
+Expected status code <200> but was <404>.
+
+	at io.restassured.internal.ResponseSpecificationImpl$HamcrestAssertionClosure.validate(ResponseSpecificationImpl.java:569)
+	at io.restassured.internal.ResponseSpecificationImpl.validateResponseIfRequired(ResponseSpecificationImpl.java:932)
+	at io.restassured.internal.ResponseSpecificationImpl.statusCode(ResponseSpecificationImpl.java:163)
+	at io.restassured.internal.ResponseSpecificationImpl.statusCode(ResponseSpecificationImpl.java:168)
+	at io.restassured.internal.ValidatableResponseOptionsImpl.statusCode(ValidatableResponseOptionsImpl.java:89)
+	at campus.StudentProfileTest.readProfile(StudentProfileTest.java:30)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)
+	at org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:697)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)
+	at org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)
+	at org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:1005)
+	at org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)
+	at org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)
+	at org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:616)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:421)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:312)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:95)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1274)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1208)
+	at org.testng.TestNG.runSuites(TestNG.java:1112)
+	at org.testng.TestNG.run(TestNG.java:1079)
+	at org.apache.maven.surefire.testng.TestNGExecutor.run(TestNGExecutor.java:155)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.executeMulti(TestNGDirectoryTestSuite.java:169)
+	at org.apache.maven.surefire.testng.TestNGDirectoryTestSuite.execute(TestNGDirectoryTestSuite.java:88)
+	at org.apache.maven.surefire.testng.TestNGProvider.invoke(TestNGProvider.java:137)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+]]></failure>
+  </testcase>
+</testsuite>

@@ -1,0 +1,52 @@
+[
+  {
+    "name": "email without @",
+    "student": {
+      "firstName": "Ada",
+      "lastName": "Lovelace",
+      "email": "ada.example.com",
+      "programme": "Computer Science",
+      "courses": [
+        "Java"
+      ]
+    },
+    "field": "email"
+  },
+  {
+    "name": "first name missing",
+    "student": {
+      "lastName": "Lovelace",
+      "email": "ada@example.com",
+      "programme": "Computer Science",
+      "courses": [
+        "Java"
+      ]
+    },
+    "field": "firstName"
+  },
+  {
+    "name": "programme missing",
+    "student": {
+      "firstName": "Ada",
+      "lastName": "Lovelace",
+      "email": "ada@example.com",
+      "courses": [
+        "Java"
+      ]
+    },
+    "field": "programme"
+  },
+  {
+    "name": "email blank",
+    "student": {
+      "firstName": "Ada",
+      "lastName": "Lovelace",
+      "email": "",
+      "programme": "Computer Science",
+      "courses": [
+        "Java"
+      ]
+    },
+    "field": "email"
+  }
+]

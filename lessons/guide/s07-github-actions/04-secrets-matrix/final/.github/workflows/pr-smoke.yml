@@ -1,0 +1,42 @@
+# On every pull request: only the smoke group, on JDK 21. A minute of feedback before anyone reviews the PR.
+name: PR smoke
+
+on:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    # ---
+    # A real API key belongs in a repository secret (Settings > Secrets and variables > Actions).
+    # The workflow reads it as secrets.NAME, and GitHub prints *** wherever it appears in a log.
+    # The base URL is not secret: a repository variable, with the public Campus Lab when none is set.
+    env:
+      CAMPUS_API_KEY: ${{ secrets.CAMPUS_API_KEY }}
+      CAMPUS_BASE_URL: ${{ vars.CAMPUS_BASE_URL || 'https://campus-lab-production.up.railway.app' }}
+
+    # --- keep
+    # Check out the code and install JDK 21, as in the first workflow.
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # ---
+      # This public course repository stores no key. When the secret is empty, the job asks Campus Lab
+      # for a free sandbox key, and ::add-mask:: hides it like a secret in every later log line.
+      - name: Get a sandbox key when no secret is set
+        if: env.CAMPUS_API_KEY == ''
+        run: |
+          key=$(curl -sf -X POST "$CAMPUS_BASE_URL/api/keys" -H 'Content-Type: application/json' -d '{}' | jq -r .apiKey)
+          echo "::add-mask::$key"
+          echo "CAMPUS_API_KEY=$key" >> "$GITHUB_ENV"
+          echo "Got a sandbox key: $key"
+
+      # ---
+      # -Dgroups=smoke tells surefire to run only TestNG tests in the "smoke" group.
+      - name: Smoke tests
+        run: mvn -B test -Dgroups=smoke

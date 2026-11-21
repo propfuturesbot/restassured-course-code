@@ -1,0 +1,14 @@
+# The two classic practice apps of the course, on Docker:
+#   docker compose -f apps/docker-compose.yml up -d --build
+# Students app -> http://localhost:8080/student/list     BestBuy -> http://localhost:3030/products
+# The BestBuy image is amd64 only: on Apple Silicon Docker runs it under emulation (slower start, works).
+# Campus Lab has its own repo and compose file: CAMPUS_PORT=8000 docker compose up -d --build
+services:
+  students:
+    build: ./students-app
+    ports:
+      - "8080:8080"
+  bestbuy:
+    image: tejasn1/best-buy-api-playground
+    ports:
+      - "3030:3030"

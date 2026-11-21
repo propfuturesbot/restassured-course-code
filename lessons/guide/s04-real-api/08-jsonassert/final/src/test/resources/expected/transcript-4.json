@@ -1,0 +1,9 @@
+{
+  "student": { "id": 4, "name": "Elena Nguyen", "programme": "Psychology", "year": 3, "status": "active" },
+  "courses": [
+    { "code": "PSY210", "title": "Research Methods", "credits": 3, "term": "<any term>", "status": "enrolled", "grade": null, "points": null },
+    { "code": "PSY101", "title": "Introduction to Psychology", "credits": 3, "term": "<any term>", "status": "completed", "grade": "B+", "points": 3.3 }
+  ],
+  "gpa": 3.3,
+  "creditsEarned": 3
+}

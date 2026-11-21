@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Stricter than the OpenAPI Problem component: a 422 must list its errors, and each error must point at a field.",
+  "type": "object",
+  "required": ["type", "title", "status", "detail", "instance", "errors"],
+  "properties": {
+    "type": { "type": "string", "pattern": "/problems/validation-error$" },
+    "title": { "const": "Unprocessable Content" },
+    "status": { "const": 422 },
+    "detail": { "type": "string" },
+    "instance": { "type": "string" },
+    "errors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["field", "pointer", "message"],
+        "properties": {
+          "field": { "type": "string" },
+          "pointer": { "type": "string", "pattern": "^/" },
+          "message": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

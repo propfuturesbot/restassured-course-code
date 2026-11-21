@@ -1,0 +1,31 @@
+<!-- Logging for test runs. Console: the test results only. File target/logs/test-run.log: everything,
+     including every HTTP request and response (DEBUG), each line tagged with the thread and the test. -->
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder><pattern>%msg%n</pattern></encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>target/logs/test-run.log</file>
+    <append>false</append>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] [%X{test}] %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- http: every call to the file, at DEBUG (headers + bodies). Not on the console. -->
+  <logger name="http" level="DEBUG" additivity="false">
+    <appender-ref ref="FILE"/>
+  </logger>
+
+  <!-- tests (the listener): PASS / FAIL / SKIP lines on the console AND in the file -->
+  <logger name="tests" level="INFO" additivity="false">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </logger>
+
+  <!-- Libraries (Apache HttpClient, POI...) only when they warn -->
+  <root level="WARN">
+    <appender-ref ref="FILE"/>
+  </root>
+</configuration>

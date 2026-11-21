@@ -1,0 +1,77 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$comment": "StudentCreate from Campus Lab's openapi.json (the body of POST /api/v1/students), copied unchanged by the course.",
+ "properties": {
+  "firstName": {
+   "type": "string",
+   "maxLength": 60,
+   "minLength": 1,
+   "title": "Firstname"
+  },
+  "lastName": {
+   "type": "string",
+   "maxLength": 60,
+   "minLength": 1,
+   "title": "Lastname"
+  },
+  "email": {
+   "type": "string",
+   "maxLength": 160,
+   "title": "Email"
+  },
+  "programme": {
+   "type": "string",
+   "maxLength": 100,
+   "minLength": 2,
+   "title": "Programme"
+  },
+  "year": {
+   "type": "integer",
+   "maximum": 6.0,
+   "minimum": 1.0,
+   "title": "Year",
+   "default": 1
+  },
+  "status": {
+   "type": "string",
+   "enum": [
+    "active",
+    "suspended",
+    "graduated"
+   ],
+   "title": "Status",
+   "default": "active"
+  },
+  "dateOfBirth": {
+   "anyOf": [
+    {
+     "type": "string",
+     "format": "date"
+    },
+    {
+     "type": "null"
+    }
+   ],
+   "title": "Dateofbirth"
+  }
+ },
+ "additionalProperties": false,
+ "type": "object",
+ "required": [
+  "firstName",
+  "lastName",
+  "email",
+  "programme"
+ ],
+ "title": "StudentCreate",
+ "examples": [
+  {
+   "dateOfBirth": "2005-12-10",
+   "email": "ada.lovelace@example.edu",
+   "firstName": "Ada",
+   "lastName": "Lovelace",
+   "programme": "Computer Science",
+   "year": 2
+  }
+ ]
+}

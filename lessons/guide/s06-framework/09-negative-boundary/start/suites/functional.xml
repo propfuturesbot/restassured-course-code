@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Functional: the deeper checks. mvn test -Dsuite=suites/functional.xml -->
+<suite name="Functional" verbose="1">
+  <test name="functional">
+    <groups>
+      <run>
+        <include name="functional"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="tests.*"/>
+    </packages>
+  </test>
+</suite>

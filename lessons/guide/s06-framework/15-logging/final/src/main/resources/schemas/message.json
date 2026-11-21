@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "The Students app's answer to a write: {\"msg\": \"...\"}",
+  "type": "object",
+  "required": [
+    "msg"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "msg": {
+      "type": "string"
+    }
+  }
+}

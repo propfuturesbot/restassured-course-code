@@ -1,0 +1,16 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- The whole suite in parallel by classes, 4 threads.  mvn test -Dsuite=suites/parallel-classes.xml
+     methods: any two test methods may run at the same time (most parallel, needs the most care).
+     classes: the methods of one class stay on one thread; different classes run side by side. -->
+<suite name="Students framework, parallel classes" parallel="classes" thread-count="4" verbose="1">
+  <test name="all tests">
+    <groups>
+      <run>
+        <exclude name="demo"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="tests.*"/>
+    </packages>
+  </test>
+</suite>

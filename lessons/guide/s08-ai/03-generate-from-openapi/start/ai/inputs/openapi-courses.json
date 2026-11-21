@@ -1,0 +1,1967 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Campus Lab API",
+  "description": "Excerpt of Campus Lab's openapi.json, cut by the course with a script: the two course paths and every component they reference, unchanged (only this description was replaced).",
+  "version": "1.0.0"
+ },
+ "servers": [],
+ "security": [
+  {
+   "ApiKey": []
+  },
+  {
+   "Basic": []
+  },
+  {
+   "Bearer": []
+  },
+  {
+   "OAuth2": [
+    "students:read",
+    "students:write",
+    "enrollments:write",
+    "payments:write"
+   ]
+  }
+ ],
+ "paths": {
+  "/api/v1/courses": {
+   "get": {
+    "tags": [
+     "Courses"
+    ],
+    "summary": "List courses",
+    "description": "Filter by `department` (code), `level`, `credits`, `hasSeats`, `q`; sort with `sort=code,-credits`; offset or cursor pagination like students.",
+    "operationId": "list_courses_api_v1_courses_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 20,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer",
+         "minimum": 0
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Offset"
+      }
+     },
+     {
+      "name": "cursor",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Cursor"
+      }
+     },
+     {
+      "name": "department",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "examples": [
+        "CS"
+       ],
+       "title": "Department"
+      }
+     },
+     {
+      "name": "level",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Level"
+      }
+     },
+     {
+      "name": "credits",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Credits"
+      }
+     },
+     {
+      "name": "hasSeats",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "boolean"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Hasseats"
+      }
+     },
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 100
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     },
+     {
+      "name": "sort",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Sort"
+      }
+     },
+     {
+      "name": "fields",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Fields"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CourseList"
+        }
+       }
+      },
+      "headers": {
+       "X-Sandbox-Expires": {
+        "description": "When this key and its data are deleted",
+        "schema": {
+         "type": "string",
+         "format": "date-time"
+        }
+       }
+      }
+     },
+     "400": {
+      "description": "Bad Request",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/bad-request",
+         "title": "Bad Request",
+         "status": 400,
+         "detail": "limit must be between 1 and 100.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "No key \u2014 get yours at /keys",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/key-required",
+         "title": "Unauthorized",
+         "status": 401,
+         "detail": "An API key is required. Get your free key at /keys",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Link": {
+        "description": "<\u2026/keys>; rel=\"help\"",
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/insufficient-scope",
+         "title": "Forbidden",
+         "status": 403,
+         "detail": "This operation needs the 'students:write' scope.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Too Many Requests",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/rate-limited",
+         "title": "Too Many Requests",
+         "status": 429,
+         "detail": "Rate limit of 120 requests per minute exceeded.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     },
+     "503": {
+      "description": "Load shedding \u2014 retry after Retry-After",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/overloaded",
+         "title": "Service Unavailable",
+         "status": 503,
+         "detail": "The server is at capacity and shed this request.",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Retry-After": {
+        "schema": {
+         "type": "integer"
+        },
+        "description": "Seconds"
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "Courses"
+    ],
+    "summary": "Create a course",
+    "operationId": "create_course_api_v1_courses_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CourseCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CourseOut"
+        }
+       }
+      },
+      "headers": {
+       "X-Sandbox-Expires": {
+        "description": "When this key and its data are deleted",
+        "schema": {
+         "type": "string",
+         "format": "date-time"
+        }
+       }
+      }
+     },
+     "409": {
+      "description": "Conflict",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/conflict",
+         "title": "Conflict",
+         "status": 409,
+         "detail": "The request conflicts with the current state of the resource.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Content",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/validation-error",
+         "title": "Unprocessable Content",
+         "status": 422,
+         "detail": "The request has invalid fields.",
+         "instance": "/api/v1/students/9999",
+         "errors": [
+          {
+           "field": "email",
+           "pointer": "/email",
+           "message": "must be a well-formed email address",
+           "code": "value_error"
+          }
+         ]
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "No key \u2014 get yours at /keys",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/key-required",
+         "title": "Unauthorized",
+         "status": 401,
+         "detail": "An API key is required. Get your free key at /keys",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Link": {
+        "description": "<\u2026/keys>; rel=\"help\"",
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/insufficient-scope",
+         "title": "Forbidden",
+         "status": 403,
+         "detail": "This operation needs the 'students:write' scope.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Too Many Requests",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/rate-limited",
+         "title": "Too Many Requests",
+         "status": 429,
+         "detail": "Rate limit of 120 requests per minute exceeded.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "503": {
+      "description": "Load shedding \u2014 retry after Retry-After",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/overloaded",
+         "title": "Service Unavailable",
+         "status": 503,
+         "detail": "The server is at capacity and shed this request.",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Retry-After": {
+        "schema": {
+         "type": "integer"
+        },
+        "description": "Seconds"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/v1/courses/{course_id}": {
+   "get": {
+    "tags": [
+     "Courses"
+    ],
+    "summary": "Get a course",
+    "description": "Supports `ETag` / `If-None-Match`.",
+    "operationId": "get_course_api_v1_courses__course_id__get",
+    "parameters": [
+     {
+      "name": "course_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Course Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CourseOut"
+        }
+       }
+      },
+      "headers": {
+       "X-Sandbox-Expires": {
+        "description": "When this key and its data are deleted",
+        "schema": {
+         "type": "string",
+         "format": "date-time"
+        }
+       }
+      }
+     },
+     "304": {
+      "description": "Not modified"
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/not-found",
+         "title": "Not Found",
+         "status": 404,
+         "detail": "Student 9999 does not exist in this sandbox.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "No key \u2014 get yours at /keys",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/key-required",
+         "title": "Unauthorized",
+         "status": 401,
+         "detail": "An API key is required. Get your free key at /keys",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Link": {
+        "description": "<\u2026/keys>; rel=\"help\"",
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/insufficient-scope",
+         "title": "Forbidden",
+         "status": 403,
+         "detail": "This operation needs the 'students:write' scope.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Too Many Requests",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/rate-limited",
+         "title": "Too Many Requests",
+         "status": 429,
+         "detail": "Rate limit of 120 requests per minute exceeded.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     },
+     "503": {
+      "description": "Load shedding \u2014 retry after Retry-After",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/overloaded",
+         "title": "Service Unavailable",
+         "status": 503,
+         "detail": "The server is at capacity and shed this request.",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Retry-After": {
+        "schema": {
+         "type": "integer"
+        },
+        "description": "Seconds"
+       }
+      }
+     }
+    }
+   },
+   "put": {
+    "tags": [
+     "Courses"
+    ],
+    "summary": "Replace a course",
+    "description": "`If-Match` optional; 412 on mismatch. The course code cannot change.",
+    "operationId": "put_course_api_v1_courses__course_id__put",
+    "parameters": [
+     {
+      "name": "course_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Course Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CourseCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CourseOut"
+        }
+       }
+      },
+      "headers": {
+       "X-Sandbox-Expires": {
+        "description": "When this key and its data are deleted",
+        "schema": {
+         "type": "string",
+         "format": "date-time"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/not-found",
+         "title": "Not Found",
+         "status": 404,
+         "detail": "Student 9999 does not exist in this sandbox.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "409": {
+      "description": "Conflict",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/conflict",
+         "title": "Conflict",
+         "status": 409,
+         "detail": "The request conflicts with the current state of the resource.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "412": {
+      "description": "Precondition Failed",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/precondition-failed",
+         "title": "Precondition Failed",
+         "status": 412,
+         "detail": "If-Match does not match the current ETag.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Content",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/validation-error",
+         "title": "Unprocessable Content",
+         "status": 422,
+         "detail": "The request has invalid fields.",
+         "instance": "/api/v1/students/9999",
+         "errors": [
+          {
+           "field": "email",
+           "pointer": "/email",
+           "message": "must be a well-formed email address",
+           "code": "value_error"
+          }
+         ]
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "No key \u2014 get yours at /keys",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/key-required",
+         "title": "Unauthorized",
+         "status": 401,
+         "detail": "An API key is required. Get your free key at /keys",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Link": {
+        "description": "<\u2026/keys>; rel=\"help\"",
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/insufficient-scope",
+         "title": "Forbidden",
+         "status": 403,
+         "detail": "This operation needs the 'students:write' scope.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Too Many Requests",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/rate-limited",
+         "title": "Too Many Requests",
+         "status": 429,
+         "detail": "Rate limit of 120 requests per minute exceeded.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "503": {
+      "description": "Load shedding \u2014 retry after Retry-After",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/overloaded",
+         "title": "Service Unavailable",
+         "status": 503,
+         "detail": "The server is at capacity and shed this request.",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Retry-After": {
+        "schema": {
+         "type": "integer"
+        },
+        "description": "Seconds"
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "Courses"
+    ],
+    "summary": "Update part of a course",
+    "operationId": "patch_course_api_v1_courses__course_id__patch",
+    "parameters": [
+     {
+      "name": "course_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Course Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CoursePatch"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CourseOut"
+        }
+       }
+      },
+      "headers": {
+       "X-Sandbox-Expires": {
+        "description": "When this key and its data are deleted",
+        "schema": {
+         "type": "string",
+         "format": "date-time"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/not-found",
+         "title": "Not Found",
+         "status": 404,
+         "detail": "Student 9999 does not exist in this sandbox.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "409": {
+      "description": "Conflict",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/conflict",
+         "title": "Conflict",
+         "status": 409,
+         "detail": "The request conflicts with the current state of the resource.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "412": {
+      "description": "Precondition Failed",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/precondition-failed",
+         "title": "Precondition Failed",
+         "status": 412,
+         "detail": "If-Match does not match the current ETag.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Unprocessable Content",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/validation-error",
+         "title": "Unprocessable Content",
+         "status": 422,
+         "detail": "The request has invalid fields.",
+         "instance": "/api/v1/students/9999",
+         "errors": [
+          {
+           "field": "email",
+           "pointer": "/email",
+           "message": "must be a well-formed email address",
+           "code": "value_error"
+          }
+         ]
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "No key \u2014 get yours at /keys",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/key-required",
+         "title": "Unauthorized",
+         "status": 401,
+         "detail": "An API key is required. Get your free key at /keys",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Link": {
+        "description": "<\u2026/keys>; rel=\"help\"",
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/insufficient-scope",
+         "title": "Forbidden",
+         "status": 403,
+         "detail": "This operation needs the 'students:write' scope.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Too Many Requests",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/rate-limited",
+         "title": "Too Many Requests",
+         "status": 429,
+         "detail": "Rate limit of 120 requests per minute exceeded.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "503": {
+      "description": "Load shedding \u2014 retry after Retry-After",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/overloaded",
+         "title": "Service Unavailable",
+         "status": 503,
+         "detail": "The server is at capacity and shed this request.",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Retry-After": {
+        "schema": {
+         "type": "integer"
+        },
+        "description": "Seconds"
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "Courses"
+    ],
+    "summary": "Delete a course",
+    "description": "409 while students are enrolled.",
+    "operationId": "delete_course_api_v1_courses__course_id__delete",
+    "parameters": [
+     {
+      "name": "course_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Course Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response",
+      "headers": {
+       "X-Sandbox-Expires": {
+        "description": "When this key and its data are deleted",
+        "schema": {
+         "type": "string",
+         "format": "date-time"
+        }
+       }
+      }
+     },
+     "404": {
+      "description": "Not Found",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/not-found",
+         "title": "Not Found",
+         "status": 404,
+         "detail": "Student 9999 does not exist in this sandbox.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "409": {
+      "description": "Conflict",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/conflict",
+         "title": "Conflict",
+         "status": 409,
+         "detail": "The request conflicts with the current state of the resource.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "412": {
+      "description": "Precondition Failed",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/precondition-failed",
+         "title": "Precondition Failed",
+         "status": 412,
+         "detail": "If-Match does not match the current ETag.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "401": {
+      "description": "No key \u2014 get yours at /keys",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/key-required",
+         "title": "Unauthorized",
+         "status": 401,
+         "detail": "An API key is required. Get your free key at /keys",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Link": {
+        "description": "<\u2026/keys>; rel=\"help\"",
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "403": {
+      "description": "Forbidden",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/insufficient-scope",
+         "title": "Forbidden",
+         "status": 403,
+         "detail": "This operation needs the 'students:write' scope.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "429": {
+      "description": "Too Many Requests",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "https://campus-lab.example/problems/rate-limited",
+         "title": "Too Many Requests",
+         "status": 429,
+         "detail": "Rate limit of 120 requests per minute exceeded.",
+         "instance": "/api/v1/students/9999"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     },
+     "503": {
+      "description": "Load shedding \u2014 retry after Retry-After",
+      "content": {
+       "application/problem+json": {
+        "schema": {
+         "$ref": "#/components/schemas/Problem"
+        },
+        "example": {
+         "type": "/problems/overloaded",
+         "title": "Service Unavailable",
+         "status": 503,
+         "detail": "The server is at capacity and shed this request.",
+         "instance": "/api/v1/students"
+        }
+       }
+      },
+      "headers": {
+       "Retry-After": {
+        "schema": {
+         "type": "integer"
+        },
+        "description": "Seconds"
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Problem": {
+    "additionalProperties": true,
+    "properties": {
+     "type": {
+      "examples": [
+       "https://host/problems/validation-error"
+      ],
+      "title": "Type",
+      "type": "string"
+     },
+     "title": {
+      "title": "Title",
+      "type": "string"
+     },
+     "status": {
+      "title": "Status",
+      "type": "integer"
+     },
+     "detail": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Detail"
+     },
+     "instance": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Instance"
+     },
+     "errors": {
+      "anyOf": [
+       {
+        "items": {
+         "additionalProperties": true,
+         "type": "object"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "default": null,
+      "title": "Errors"
+     }
+    },
+    "required": [
+     "type",
+     "title",
+     "status"
+    ],
+    "title": "Problem",
+    "type": "object"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "CourseOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "code": {
+      "type": "string",
+      "title": "Code"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "credits": {
+      "type": "integer",
+      "title": "Credits"
+     },
+     "capacity": {
+      "type": "integer",
+      "title": "Capacity"
+     },
+     "enrolled": {
+      "type": "integer",
+      "title": "Enrolled"
+     },
+     "seatsAvailable": {
+      "type": "integer",
+      "title": "Seatsavailable"
+     },
+     "level": {
+      "type": "integer",
+      "title": "Level"
+     },
+     "department": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Department"
+     },
+     "instructor": {
+      "anyOf": [
+       {
+        "additionalProperties": true,
+        "type": "object"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Instructor"
+     },
+     "prerequisites": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Prerequisites"
+     },
+     "schedule": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Schedule"
+     },
+     "term": {
+      "type": "string",
+      "title": "Term"
+     },
+     "dropDeadline": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dropdeadline"
+     },
+     "dropDeadlinePassed": {
+      "type": "boolean",
+      "title": "Dropdeadlinepassed"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "code",
+     "title",
+     "description",
+     "credits",
+     "capacity",
+     "enrolled",
+     "seatsAvailable",
+     "level",
+     "department",
+     "instructor",
+     "prerequisites",
+     "schedule",
+     "term",
+     "dropDeadline",
+     "dropDeadlinePassed"
+    ],
+    "title": "CourseOut",
+    "examples": [
+     {
+      "capacity": 45,
+      "code": "CS102",
+      "credits": 4,
+      "department": {
+       "code": "CS",
+       "id": 1,
+       "name": "Computer Science"
+      },
+      "description": "...",
+      "dropDeadline": "2026-12-03",
+      "dropDeadlinePassed": false,
+      "enrolled": 12,
+      "id": 2,
+      "instructor": {
+       "id": 7,
+       "name": "Ruby Tanaka"
+      },
+      "level": 100,
+      "prerequisites": [
+       "CS101"
+      ],
+      "schedule": {
+       "days": [
+        "Tue",
+        "Thu"
+       ],
+       "end": "11:45",
+       "room": "Turing 102",
+       "start": "10:30"
+      },
+      "seatsAvailable": 33,
+      "term": "Fall 2026",
+      "title": "Data Structures"
+     }
+    ]
+   },
+   "CoursePatch": {
+    "properties": {
+     "title": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 120,
+        "minLength": 2
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Title"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "credits": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 8.0,
+        "minimum": 1.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Credits"
+     },
+     "capacity": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 500.0,
+        "minimum": 1.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Capacity"
+     },
+     "departmentId": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Departmentid"
+     },
+     "instructorId": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Instructorid"
+     },
+     "prerequisites": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array",
+        "maxItems": 6
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prerequisites"
+     },
+     "schedule": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/Schedule"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "term": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 20
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Term"
+     },
+     "dropDeadline": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dropdeadline"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "title": "CoursePatch",
+    "examples": [
+     {
+      "capacity": 30,
+      "title": "API Testing (Advanced)"
+     }
+    ]
+   },
+   "Schedule": {
+    "properties": {
+     "days": {
+      "items": {
+       "type": "string",
+       "enum": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+       ]
+      },
+      "type": "array",
+      "maxItems": 7,
+      "minItems": 1,
+      "title": "Days"
+     },
+     "start": {
+      "type": "string",
+      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "Start"
+     },
+     "end": {
+      "type": "string",
+      "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+      "title": "End"
+     },
+     "room": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 40
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Room"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "days",
+     "start",
+     "end"
+    ],
+    "title": "Schedule"
+   },
+   "CourseCreate": {
+    "properties": {
+     "code": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,5}\\d{3}$",
+      "title": "Code"
+     },
+     "title": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 2,
+      "title": "Title"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "credits": {
+      "type": "integer",
+      "maximum": 8.0,
+      "minimum": 1.0,
+      "title": "Credits"
+     },
+     "capacity": {
+      "type": "integer",
+      "maximum": 500.0,
+      "minimum": 1.0,
+      "title": "Capacity"
+     },
+     "departmentId": {
+      "type": "integer",
+      "title": "Departmentid"
+     },
+     "instructorId": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Instructorid"
+     },
+     "prerequisites": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 6,
+      "title": "Prerequisites"
+     },
+     "schedule": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/Schedule"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "term": {
+      "type": "string",
+      "maxLength": 20,
+      "title": "Term",
+      "default": "Fall 2026"
+     },
+     "dropDeadline": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Dropdeadline"
+     }
+    },
+    "additionalProperties": false,
+    "type": "object",
+    "required": [
+     "code",
+     "title",
+     "credits",
+     "capacity",
+     "departmentId"
+    ],
+    "title": "CourseCreate",
+    "examples": [
+     {
+      "capacity": 25,
+      "code": "CS450",
+      "credits": 3,
+      "departmentId": 1,
+      "dropDeadline": "2026-12-01",
+      "instructorId": 1,
+      "prerequisites": [
+       "CS330"
+      ],
+      "schedule": {
+       "days": [
+        "Tue",
+        "Thu"
+       ],
+       "end": "11:45",
+       "room": "Turing 210",
+       "start": "10:30"
+      },
+      "title": "API Testing in Practice"
+     }
+    ]
+   },
+   "CourseList": {
+    "properties": {
+     "data": {
+      "items": {
+       "$ref": "#/components/schemas/CourseOut"
+      },
+      "type": "array",
+      "title": "Data"
+     },
+     "meta": {
+      "$ref": "#/components/schemas/ListMeta"
+     }
+    },
+    "type": "object",
+    "required": [
+     "data",
+     "meta"
+    ],
+    "title": "CourseList"
+   },
+   "ListMeta": {
+    "properties": {
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "limit": {
+      "type": "integer",
+      "title": "Limit"
+     },
+     "offset": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Offset"
+     },
+     "count": {
+      "type": "integer",
+      "title": "Count"
+     },
+     "nextCursor": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Nextcursor"
+     },
+     "prevCursor": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Prevcursor"
+     }
+    },
+    "type": "object",
+    "required": [
+     "total",
+     "limit",
+     "offset",
+     "count",
+     "nextCursor",
+     "prevCursor"
+    ],
+    "title": "ListMeta"
+   }
+  },
+  "securitySchemes": {
+   "ApiKey": {
+    "type": "apiKey",
+    "in": "header",
+    "name": "X-API-Key",
+    "description": "From `POST /api/keys`."
+   },
+   "Basic": {
+    "type": "http",
+    "scheme": "basic",
+    "description": "Your key's basicAuth username/password."
+   },
+   "Bearer": {
+    "type": "http",
+    "scheme": "bearer",
+    "bearerFormat": "JWT",
+    "description": "A token from /oauth/token or /api/v1/auth/student-token."
+   },
+   "OAuth2": {
+    "type": "oauth2",
+    "description": "Use the oauthClient that came with your key.",
+    "flows": {
+     "clientCredentials": {
+      "tokenUrl": "/oauth/token",
+      "scopes": {
+       "students:read": "Read students and everything else",
+       "students:write": "Create/update/delete records",
+       "enrollments:write": "Enrol and drop",
+       "payments:write": "Pay invoices"
+      }
+     },
+     "authorizationCode": {
+      "authorizationUrl": "/oauth/authorize",
+      "tokenUrl": "/oauth/token",
+      "scopes": {
+       "students:read": "Read students and everything else",
+       "students:write": "Create/update/delete records",
+       "enrollments:write": "Enrol and drop",
+       "payments:write": "Pay invoices"
+      }
+     }
+    }
+   }
+  }
+ }
+}

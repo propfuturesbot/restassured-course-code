@@ -1,0 +1,19 @@
+{
+  "name": "Students API tests",
+  "output": "./target/allure-report",
+  "historyPath": "./allure-history.jsonl",
+  "historyLimit": 20,
+  "variables": {
+    "Target": "Students app, http://localhost:8080",
+    "Java": "21",
+    "REST Assured": "6.3.0",
+    "JUnit": "6.1.3"
+  },
+  "plugins": {
+    "awesome": {
+      "options": {
+        "singleFile": true
+      }
+    }
+  }
+}

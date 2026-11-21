@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Lesson project: Java 21, REST Assured 6.3.0, JUnit 6. Run every test:  mvn test
+     One class:  mvn test -Dtest=StudentCrudTest      Targets: see the README of the repository (env vars) -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.coursesmith.restassured</groupId>
+  <artifactId>intro-allure3-tests</artifactId>
+  <version>1.0</version>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <rest-assured.version>6.3.0</rest-assured.version>
+    <junit.version>6.1.3</junit.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- allure-jupiter brings junit-platform-launcher 1.10.3 (JUnit 5). Mixed with JUnit 6 the run fails with
+           "OutputDirectoryCreator not available; probably due to unaligned versions". The BOM aligns every JUnit jar. -->
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>${rest-assured.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- REST Assured 6 ships no JSON mapper: without one, body(map or object) fails with
+           "Cannot serialize object because no JSON serializer found in classpath" -->
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.23.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Allure for JUnit: writes one result file per test into target/allure-results.
+           (It used to be called allure-junit5; Maven warns "has been relocated to allure-jupiter".) -->
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-jupiter</artifactId>
+      <version>2.35.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- AllureRestAssured filter: attaches every request and response to the test that sent it -->
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-rest-assured</artifactId>
+      <version>2.35.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest</artifactId>
+      <version>3.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.16.0</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.6.1</version>
+        <configuration>
+          <systemPropertyVariables>
+            <!-- results go under target/, so "mvn clean" removes them -->
+            <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

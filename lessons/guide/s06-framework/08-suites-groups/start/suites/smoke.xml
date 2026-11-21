@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!-- Smoke: is the target up and does the basic path work? Seconds, not minutes. Run before everything else.
+     mvn test -Dsuite=suites/smoke.xml -->
+<suite name="Smoke" verbose="1">
+  <test name="smoke">
+    <groups>
+      <run>
+        <include name="smoke"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="tests.*"/>
+    </packages>
+  </test>
+</suite>

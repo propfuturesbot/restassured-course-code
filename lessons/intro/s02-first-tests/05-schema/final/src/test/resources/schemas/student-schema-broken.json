@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Student",
+  "description": "The same schema, broken on purpose: id must be a string and a field the app never sends is required.",
+  "type": "object",
+  "required": [
+    "id",
+    "firstName",
+    "lastName",
+    "email",
+    "programme",
+    "courses",
+    "phone"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "firstName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lastName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "email": {
+      "type": "string",
+      "pattern": "^[^@\\s]+@[^@\\s]+$"
+    },
+    "programme": {
+      "type": "string",
+      "minLength": 1
+    },
+    "courses": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

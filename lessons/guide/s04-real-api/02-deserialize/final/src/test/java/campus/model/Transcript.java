@@ -1,0 +1,37 @@
+// A transcript as a classic POJO: private fields, a no-argument constructor, getters and setters.
+package campus.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.util.List;
+
+// ---
+// The older style, still everywhere in real projects: Jackson calls the empty constructor, then the setters.
+// Nested JSON becomes nested classes: a transcript has a student summary and a list of course results.
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Transcript {
+    private StudentSummary student;
+    private List<CourseResult> courses;
+    private Double gpa;
+    private int creditsEarned;
+
+    public StudentSummary getStudent() { return student; }
+    public void setStudent(StudentSummary student) { this.student = student; }
+    public List<CourseResult> getCourses() { return courses; }
+    public void setCourses(List<CourseResult> courses) { this.courses = courses; }
+    public Double getGpa() { return gpa; }
+    public void setGpa(Double gpa) { this.gpa = gpa; }
+    public int getCreditsEarned() { return creditsEarned; }
+    public void setCreditsEarned(int creditsEarned) { this.creditsEarned = creditsEarned; }
+
+    // --- keep
+    // The two nested shapes are records: short, and Jackson reads records as well as POJOs.
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record StudentSummary(int id, String name, String programme, int year) {
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record CourseResult(String code, String title, int credits, String term, String status,
+                               String grade, Double points) {
+    }
+}
